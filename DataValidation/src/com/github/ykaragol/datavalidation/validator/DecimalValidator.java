@@ -4,6 +4,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 
 import com.github.ykaragol.datavalidation.Operator;
+import com.github.ykaragol.datavalidation.ValidationResult;
+import com.github.ykaragol.datavalidation.ValidationResultImpl;
 import com.github.ykaragol.datavalidation.Validator;
 
 public class DecimalValidator implements Validator {
@@ -15,10 +17,10 @@ public class DecimalValidator implements Validator {
 	}
 
 	@Override
-	public void validate(XSSFCell cell) {
+	public ValidationResult validate(XSSFCell cell) {
 		int cellType = cell.getCellType();
 		if (cellType == Cell.CELL_TYPE_BLANK) {
-			return;
+			return null;
 		}
 
 		double cellValue;
@@ -31,16 +33,18 @@ public class DecimalValidator implements Validator {
 				 //Warning 
 			 }catch(NumberFormatException e){
 				 //Error
-				 return;
+				 return new ValidationResultImpl(false, "Value type is not as expected!");
 			 }
 		} else {
-			return; //Error
+			return new ValidationResultImpl(false, "Value type is not as expected!"); //Error
 		}
 		
 		if (operator.check(cellValue)) {
 			//True
+			return new ValidationResultImpl(true, null);
 		} else {
 			//Error
+			return new ValidationResultImpl(false, "Error!");
 		}
 	}
 

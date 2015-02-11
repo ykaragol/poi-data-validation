@@ -2,13 +2,15 @@ package com.github.ykaragol.datavalidation.validator;
 
 import org.apache.poi.xssf.usermodel.XSSFCell;
 
+import com.github.ykaragol.datavalidation.ValidationResult;
 import com.github.ykaragol.datavalidation.Validator;
 
-public class AnyValidator implements Validator {
+public class NullValidator implements Validator {
 
 	@Override
-	public void validate(XSSFCell cell) {
+	public ValidationResult validate(XSSFCell cell) {
 		//Nothing to validate
+		return null;
 	}
 
 }

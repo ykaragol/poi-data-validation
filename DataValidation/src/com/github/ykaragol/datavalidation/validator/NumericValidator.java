@@ -4,27 +4,23 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 
 import com.github.ykaragol.datavalidation.Operator;
+import com.github.ykaragol.datavalidation.ValidationResult;
 import com.github.ykaragol.datavalidation.Validator;
 
 public class NumericValidator implements Validator {
-
 	
 	private Operator operator;
-
-
 
 	public NumericValidator(Operator operator) {
 		this.operator = operator;
 	}
 
-
-
 	@Override
-	public void validate(XSSFCell cell) {
+	public ValidationResult validate(XSSFCell cell) {
 		//result ??
 		int cellType = cell.getCellType();
 		if (cellType == Cell.CELL_TYPE_BLANK) {
-			return;
+			return null;
 		}
 		
 		double cellValue;
@@ -37,12 +33,12 @@ public class NumericValidator implements Validator {
 				 //Warning 
 			 }catch(NumberFormatException e){
 				 //Error
-				 return;
+				 return null;
 			 }
 		} else {
-			return; //Error
+			return null; //Error
 		}
-		//TODO : refactor above code, they are duplicate!
+		//TODO : refactor above code, they are duplicate with DecimalValidator!
 		
 		int intRepresentation = (int) cellValue;
 		if(Double.compare(cellValue, intRepresentation)==0){
@@ -56,6 +52,7 @@ public class NumericValidator implements Validator {
 		} else {
 			//Error
 		}
+		return null;//TODO delete
 	}
 
 }

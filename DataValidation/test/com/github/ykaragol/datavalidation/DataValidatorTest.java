@@ -24,6 +24,8 @@ import org.junit.Test;
 public class DataValidatorTest {
 
 	public static final String PATH = "./test-files/";
+	public static final String FILE_NAME = "DataValidationTest.xlsx";
+	
 	public DataValidator dataValidator;
 
 	@Before
@@ -33,21 +35,19 @@ public class DataValidatorTest {
 
 	@Test
 	public void testDataValidation() {
-		String fileName = "DataValidationTest.xlsx";
+		
 
 		InputStream is = null;
 		boolean isValid = true;
 		try {
-			File file = new File(PATH + fileName);
+			File file = new File(PATH + FILE_NAME);
 			System.err.println(file.getAbsolutePath());
 			is = new FileInputStream(file);
 
-			// XSSFWorkbook wb =
-			// openWorkbook(convertEncryptedXlsx2DecryptedXlsx(is));
 			XSSFWorkbook wb = openWorkbook(is);
 			XSSFSheet sheet = wb.getSheetAt(0);
 
-			dataValidator.visitSheet(sheet);
+			dataValidator.validateSheet(sheet);
 
 		} catch (FileNotFoundException e) {
 			fail("FileNotFound");
