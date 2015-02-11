@@ -3,7 +3,7 @@ package com.github.ykaragol.datavalidation.validator;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 
 import com.github.ykaragol.datavalidation.ValidationResult;
-import com.github.ykaragol.datavalidation.Validator;
+import com.github.ykaragol.datavalidation.core.Validator;
 
 public class NullValidator implements Validator {
 

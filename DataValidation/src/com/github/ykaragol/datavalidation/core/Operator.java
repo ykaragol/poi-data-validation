@@ -1,4 +1,4 @@
-package com.github.ykaragol.datavalidation;
+package com.github.ykaragol.datavalidation.core;
 
 public interface Operator {
 	

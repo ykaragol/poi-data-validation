@@ -18,6 +18,8 @@ import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
+import com.github.ykaragol.datavalidation.core.Operator;
+import com.github.ykaragol.datavalidation.core.Validator;
 import com.github.ykaragol.datavalidation.operators.BetweenOperator;
 import com.github.ykaragol.datavalidation.operators.EqualOperator;
 import com.github.ykaragol.datavalidation.operators.GreaterOrEqualOperator;

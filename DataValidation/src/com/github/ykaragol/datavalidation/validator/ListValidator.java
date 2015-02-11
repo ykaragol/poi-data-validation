@@ -7,8 +7,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 
 import com.github.ykaragol.datavalidation.ValidationResult;
-import com.github.ykaragol.datavalidation.ValidationResultImpl;
-import com.github.ykaragol.datavalidation.Validator;
+import com.github.ykaragol.datavalidation.core.ValidationResultImpl;
+import com.github.ykaragol.datavalidation.core.Validator;
 
 public class ListValidator implements Validator {
 

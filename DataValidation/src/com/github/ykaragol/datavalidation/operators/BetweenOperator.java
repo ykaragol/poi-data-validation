@@ -1,6 +1,7 @@
 package com.github.ykaragol.datavalidation.operators;
 
-import com.github.ykaragol.datavalidation.Operator;
+import com.github.ykaragol.datavalidation.core.Operator;
+
 
 public class BetweenOperator implements Operator {
 
