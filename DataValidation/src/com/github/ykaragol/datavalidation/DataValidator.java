@@ -39,7 +39,9 @@ import com.github.ykaragol.datavalidation.validator.TimeValidator;
 
 public class DataValidator {
 
-	public void validateSheet(XSSFSheet sheet) {
+	public List<ValidationResult> validateSheet(XSSFSheet sheet) {
+		List<ValidationResult> results = new LinkedList<ValidationResult>();
+		
 		List<XSSFDataValidation> dataValidations = sheet.getDataValidations();
 		for (XSSFDataValidation xssfDataValidation : dataValidations) {
 			DataValidationConstraint validationConstraint = xssfDataValidation.getValidationConstraint();
@@ -66,12 +68,16 @@ public class DataValidator {
 						}
 						boolean inRange = cellRangeAddress.isInRange(cell.getRowIndex(), cell.getColumnIndex());
 						if (inRange) {
-							validator.validate(cell);
+							ValidationResult result = validator.validate(cell);
+							if(result!=null){
+								results.add(result);
+							}
 						}
 					}
 				}
 			}
 		}
+		return results;
 	}
 
 	private Validator buildValidator(XSSFSheet sheet, DataValidationConstraint validationConstraint) {
