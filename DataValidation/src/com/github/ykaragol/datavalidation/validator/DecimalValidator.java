@@ -33,18 +33,18 @@ public class DecimalValidator implements Validator {
 				 //Warning 
 			 }catch(NumberFormatException e){
 				 //Error
-				 return new ValidationResultImpl(false, "Value type is not as expected!");
+				 return new ValidationResultImpl(cell.getSheet().getSheetName(), cell.getReference(),  false, "Value type is not as expected!");
 			 }
 		} else {
-			return new ValidationResultImpl(false, "Value type is not as expected!"); //Error
+			return new ValidationResultImpl(cell.getSheet().getSheetName(), cell.getReference(), false, "Value type is not as expected!"); //Error
 		}
 		
 		if (operator.check(cellValue)) {
 			//True
-			return new ValidationResultImpl(true, null);
+			return null;
 		} else {
 			//Error
-			return new ValidationResultImpl(false, "Error!");
+			return new ValidationResultImpl(cell.getSheet().getSheetName(), cell.getReference(), false, "Error!");
 		}
 	}
 

@@ -24,9 +24,9 @@ public class ListValidator implements Validator {
 	public ValidationResult validate(XSSFCell cell) {
 		if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
 			if(referenceValues.contains(cell.getStringCellValue())){
-				return new ValidationResultImpl(true,null);
+				return null;
 			}
-			return new ValidationResultImpl(false, "Value type is not as expected!");
+			return new ValidationResultImpl(cell.getSheet().getSheetName(), cell.getReference(), false, "Value type is not as expected!");
 		} else {
 			// TODO how to handle this situation
 			return null;

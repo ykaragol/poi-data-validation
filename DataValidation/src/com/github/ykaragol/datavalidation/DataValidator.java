@@ -78,6 +78,12 @@ public class DataValidator {
 			}
 		}
 		return results;
+		/*
+		 * TODO 
+		 * think about splitting this function into 2 parts: 
+		 * 1. getAllValidators
+		 * 2. validate with all validators
+		 */
 	}
 
 	private Validator buildValidator(XSSFSheet sheet, DataValidationConstraint validationConstraint) {

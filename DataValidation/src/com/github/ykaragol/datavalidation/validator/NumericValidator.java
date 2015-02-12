@@ -5,6 +5,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 
 import com.github.ykaragol.datavalidation.ValidationResult;
 import com.github.ykaragol.datavalidation.core.Operator;
+import com.github.ykaragol.datavalidation.core.ValidationResultImpl;
 import com.github.ykaragol.datavalidation.core.Validator;
 
 public class NumericValidator implements Validator {
@@ -33,10 +34,11 @@ public class NumericValidator implements Validator {
 				 //Warning 
 			 }catch(NumberFormatException e){
 				 //Error
-				 return null;
+				 return new ValidationResultImpl(cell.getSheet().getSheetName(), cell.getReference(), false, "Error!");
 			 }
 		} else {
-			return null; //Error
+			//Error
+			return new ValidationResultImpl(cell.getSheet().getSheetName(), cell.getReference(), false, "Error!");
 		}
 		//TODO : refactor above code, they are duplicate with DecimalValidator!
 		
@@ -45,14 +47,16 @@ public class NumericValidator implements Validator {
 			//Continue...
 		}else{
 			//Error
+			return new ValidationResultImpl(cell.getSheet().getSheetName(), cell.getReference(), false, "Error!");
 		}
 		
 		if (operator.check(cellValue)) {
 			//True
 		} else {
+			return new ValidationResultImpl(cell.getSheet().getSheetName(), cell.getReference(), false, "Error!");
 			//Error
 		}
-		return null;//TODO delete
+		return null;
 	}
 
 }
