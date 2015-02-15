@@ -8,7 +8,7 @@ public class GreaterOrEqualOperator implements Operator {
 	private GreaterThanOperator greaterThanOperator;
 	private EqualOperator equalOperator;
 
-	public GreaterOrEqualOperator(String formula1) {
+	public GreaterOrEqualOperator(Double formula1) {
 		greaterThanOperator = new GreaterThanOperator(formula1);
 		equalOperator = new EqualOperator(formula1);
 	}

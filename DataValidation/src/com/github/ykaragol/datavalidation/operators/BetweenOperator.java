@@ -8,7 +8,7 @@ public class BetweenOperator implements Operator {
 	private GreaterOrEqualOperator greaterOrEqualOperator;
 	private LessOrEqualOperator lessOrEqualOperator;
 	
-	public BetweenOperator(String formula1, String formula2) {
+	public BetweenOperator(Double formula1, Double formula2) {
 		greaterOrEqualOperator = new GreaterOrEqualOperator(formula1);
 		lessOrEqualOperator = new LessOrEqualOperator(formula2);
 	}

@@ -2,19 +2,17 @@ package com.github.ykaragol.datavalidation.operators;
 
 import com.github.ykaragol.datavalidation.core.Operator;
 
-
-
 public class EqualOperator implements Operator {
 
-	private Double double1;
-	
-	public EqualOperator(String formula1) {
-		double1 = Double.parseDouble(formula1);
+	private Double formula1;
+
+	public EqualOperator(Double formula1) {
+		this.formula1 = formula1;
 	}
 
 	@Override
 	public boolean check(Double value) {
-		return Double.compare(double1, value) == 0;
+		return Double.compare(formula1, value) == 0;
 	}
 
 }

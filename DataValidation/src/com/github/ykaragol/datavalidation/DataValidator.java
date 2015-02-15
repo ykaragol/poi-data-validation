@@ -28,6 +28,7 @@ import com.github.ykaragol.datavalidation.operators.LessOrEqualOperator;
 import com.github.ykaragol.datavalidation.operators.LessThanOperator;
 import com.github.ykaragol.datavalidation.operators.NotBetweenOperator;
 import com.github.ykaragol.datavalidation.operators.NotEqualOperator;
+import com.github.ykaragol.datavalidation.utils.CellValueParser;
 import com.github.ykaragol.datavalidation.validator.DateValidator;
 import com.github.ykaragol.datavalidation.validator.DecimalValidator;
 import com.github.ykaragol.datavalidation.validator.FormulaValidator;
@@ -41,7 +42,7 @@ public class DataValidator {
 
 	public List<ValidationResult> validateSheet(XSSFSheet sheet) {
 		List<ValidationResult> results = new LinkedList<ValidationResult>();
-		
+
 		List<XSSFDataValidation> dataValidations = sheet.getDataValidations();
 		for (XSSFDataValidation xssfDataValidation : dataValidations) {
 			DataValidationConstraint validationConstraint = xssfDataValidation.getValidationConstraint();
@@ -69,7 +70,7 @@ public class DataValidator {
 						boolean inRange = cellRangeAddress.isInRange(cell.getRowIndex(), cell.getColumnIndex());
 						if (inRange) {
 							ValidationResult result = validator.validate(cell);
-							if(result!=null){
+							if (result != null) {
 								results.add(result);
 							}
 						}
@@ -79,10 +80,8 @@ public class DataValidator {
 		}
 		return results;
 		/*
-		 * TODO 
-		 * think about splitting this function into 2 parts: 
-		 * 1. getAllValidators
-		 * 2. validate with all validators
+		 * TODO think about splitting this function into 2 parts: 1.
+		 * getAllValidators 2. validate with all validators
 		 */
 	}
 
@@ -95,25 +94,25 @@ public class DataValidator {
 			validator = new NullValidator();
 			break;
 		case ValidationType.DATE:
-			validator = new DateValidator(buildOperator(validationConstraint));
+			validator = new DateValidator(buildOperator(sheet, validationConstraint));
 			break;
 		case ValidationType.DECIMAL:
-			validator = new DecimalValidator(buildOperator(validationConstraint));
+			validator = new DecimalValidator(buildOperator(sheet, validationConstraint));
 			break;
 		case ValidationType.FORMULA:
-			validator = new FormulaValidator(null);//TODO how to do?
+			validator = new FormulaValidator(null);// TODO how to do?
 			break;
 		case ValidationType.INTEGER:
-			validator = new NumericValidator(buildOperator(validationConstraint));
+			validator = new NumericValidator(buildOperator(sheet, validationConstraint));
 			break;
 		case ValidationType.LIST:
 			validator = new ListValidator(buildReferenceList(sheet, validationConstraint));
 			break;
 		case ValidationType.TEXT_LENGTH:
-			validator = new TextLengthValidator(buildOperator(validationConstraint));
+			validator = new TextLengthValidator(buildOperator(sheet, validationConstraint));
 			break;
 		case ValidationType.TIME:
-			validator = new TimeValidator(buildOperator(validationConstraint));
+			validator = new TimeValidator(buildOperator(sheet, validationConstraint));
 			break;
 		default:
 			throw new UnsupportedOperationException("Validation Type is not supported: " + validationType);
@@ -121,7 +120,7 @@ public class DataValidator {
 		return validator;
 	}
 
-	private Operator buildOperator(DataValidationConstraint validationConstraint) {
+	private Operator buildOperator(XSSFSheet sheet, DataValidationConstraint validationConstraint) {
 		int operatorType = validationConstraint.getOperator();
 		String formula1 = validationConstraint.getFormula1();
 		String formula2 = validationConstraint.getFormula2();
@@ -129,50 +128,65 @@ public class DataValidator {
 		Operator operator;
 		switch (operatorType) {
 		case OperatorType.BETWEEN:
-			operator = new BetweenOperator(formula1, formula2);
+			operator = new BetweenOperator(getSingleValue(sheet, formula1), getSingleValue(sheet, formula2));
 			break;
 		case OperatorType.NOT_BETWEEN:
-			operator = new NotBetweenOperator(formula1, formula2);
+			operator = new NotBetweenOperator(getSingleValue(sheet, formula1), getSingleValue(sheet, formula2));
 			break;
 		case OperatorType.EQUAL:
-			operator = new EqualOperator(formula1);
+			operator = new EqualOperator(getSingleValue(sheet, formula1));
 			break;
 		case OperatorType.NOT_EQUAL:
-			operator = new NotEqualOperator(formula1);
+			operator = new NotEqualOperator(getSingleValue(sheet, formula1));
 			break;
 		case OperatorType.GREATER_OR_EQUAL:
-			operator = new GreaterOrEqualOperator(formula1);
+			operator = new GreaterOrEqualOperator(getSingleValue(sheet, formula1));
 			break;
 		case OperatorType.GREATER_THAN:
-			operator = new GreaterThanOperator(formula1);
+			operator = new GreaterThanOperator(getSingleValue(sheet, formula1));
 			break;
 		case OperatorType.LESS_OR_EQUAL:
-			operator = new LessOrEqualOperator(formula1);
+			operator = new LessOrEqualOperator(getSingleValue(sheet, formula1));
 			break;
 		case OperatorType.LESS_THAN:
-			operator = new LessThanOperator(formula1);
+			operator = new LessThanOperator(getSingleValue(sheet, formula1));
 			break;
-		//OperatorType.IGNORED = Operator.BETWEEN 
+		// OperatorType.IGNORED = Operator.BETWEEN
 		default:
 			throw new UnsupportedOperationException("Operation Type is not supported: " + operatorType);
 		}
 		return operator;
 	}
-	
-	private List<String> buildReferenceList(XSSFSheet sheet, DataValidationConstraint validationConstraint) {
-		List<String> listValues;
+
+	private Double getSingleValue(XSSFSheet sheet, String formula) {
+		try {
+			return Double.parseDouble(formula);
+		} catch (NumberFormatException e) {
+			CellReference cellReference = new CellReference(formula);
+			if (cellReference.getSheetName() != null) {
+				sheet = sheet.getWorkbook().getSheet(cellReference.getSheetName());
+			}
+			XSSFRow row = sheet.getRow(cellReference.getRow());
+			XSSFCell cell = row.getCell(cellReference.getCol());
+			return cell.getNumericCellValue();
+		}
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private List<Object> buildReferenceList(XSSFSheet sheet, DataValidationConstraint validationConstraint) {
+		List listValues;
 		String formula1 = validationConstraint.getFormula1();
-		if(formula1.contains("$")){
+		if (formula1.contains("$")) {
 			listValues = getReferenceList(sheet, validationConstraint);
-		}else{
+		} else {
 			listValues = parseListValues(formula1);
 		}
 		return listValues;
 	}
 
-	private List<String> getReferenceList(XSSFSheet sheet, DataValidationConstraint validationConstraint) {
-		List<String> references = new LinkedList<>();
-		
+	private List<Object> getReferenceList(XSSFSheet sheet, DataValidationConstraint validationConstraint) {
+		List<Object> references = new LinkedList<>();
+
 		AreaReference areaRef = new AreaReference(validationConstraint.getFormula1());
 		CellReference[] cellRefs = areaRef.getAllReferencedCells();
 		for (CellReference cellRef : cellRefs) {
@@ -186,9 +200,8 @@ public class DataValidator {
 			if (row != null) {
 				Cell cell = row.getCell(cellRef.getCol());
 				if (cell != null) {
-					String stringCellValue = cell.getStringCellValue();
-					// TODO what if in case of number or any other format?
-					references.add(stringCellValue);
+					Object cellValue = CellValueParser.getCellValue(cell);
+					references.add(cellValue);
 				}
 			}
 		}
@@ -196,7 +209,7 @@ public class DataValidator {
 	}
 
 	private List<String> parseListValues(String listOfValues) {
-		if(listOfValues.startsWith("\"") && listOfValues.endsWith("\"")){
+		if (listOfValues.startsWith("\"") && listOfValues.endsWith("\"")) {
 			listOfValues = listOfValues.substring(1, listOfValues.length() - 1);
 		}
 		return Arrays.asList(listOfValues.split(","));

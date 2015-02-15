@@ -8,7 +8,7 @@ public class LessOrEqualOperator implements Operator {
 	private LessThanOperator lessThanOperator;
 	private EqualOperator equalOperator;
 	
-	public LessOrEqualOperator(String formula1) {
+	public LessOrEqualOperator(Double formula1) {
 		lessThanOperator = new LessThanOperator(formula1);
 		equalOperator = new EqualOperator(formula1);
 	}

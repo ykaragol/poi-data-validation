@@ -29,7 +29,7 @@ import org.junit.Test;
 public class DataValidatorTest {
 
 	public static final String PATH = "./test-files/";
-	public static final String FILE_NAME = "DataValidationTest.xlsx";
+	public static final String FILE_NAME = "DataValidationTest2.xlsx";
 	
 	public DataValidator dataValidator;
 
@@ -75,12 +75,33 @@ public class DataValidatorTest {
 			assertTrue(cells.contains("B21"));
 			assertTrue(cells.contains("B22"));
 			assertTrue(cells.contains("B23"));
-			assertTrue(cells.contains("B24"));
+	//		assertTrue(cells.contains("B24"));
 			assertTrue(cells.contains("B25"));
 			assertTrue(cells.contains("B26"));
 			assertTrue(cells.contains("B27"));
 			assertTrue(cells.contains("B28"));
-
+			assertTrue(cells.contains("B29"));
+			assertTrue(cells.contains("B30"));
+			assertTrue(cells.contains("B31"));
+			assertTrue(cells.contains("B32"));
+			assertTrue(cells.contains("B33"));
+			assertTrue(cells.contains("B34"));
+			assertTrue(cells.contains("B35"));
+	//		assertTrue(cells.contains("B36"));
+			assertTrue(cells.contains("B37"));
+			assertTrue(cells.contains("B38"));
+			assertTrue(cells.contains("B39"));
+			assertTrue(cells.contains("B40"));
+			assertTrue(cells.contains("B41"));
+	//		assertTrue(cells.contains("B42"));
+			assertTrue(cells.contains("B43"));
+			assertTrue(cells.contains("B44"));
+	//		assertTrue(cells.contains("B45"));
+	//		assertTrue(cells.contains("B46"));
+			assertTrue(cells.contains("B47"));
+	//		assertTrue(cells.contains("B48"));
+			assertTrue(cells.contains("B49"));
+			
 		} catch (FileNotFoundException e) {
 			fail("FileNotFound");
 		} finally {
